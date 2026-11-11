@@ -1,0 +1,28 @@
+[
+  {"po_id": "PO-2026-0101", "vendor_id": "V001", "po_date": "2026-10-20", "status": "OPEN",
+   "description": "Office furniture for Bengaluru HQ",
+   "lines": [
+     {"line_no": 1, "description": "Ergonomic office chair", "quantity": 50, "unit_price": 4000},
+     {"line_no": 2, "description": "Office desk 120cm", "quantity": 20, "unit_price": 7500}
+   ]},
+  {"po_id": "PO-2026-0102", "vendor_id": "V002", "po_date": "2026-09-25", "status": "OPEN",
+   "description": "Managed cloud hosting Q4 2026",
+   "lines": [
+     {"line_no": 1, "description": "Managed cloud hosting Q4 (Oct-Dec), monthly", "quantity": 3, "unit_price": 200000}
+   ]},
+  {"po_id": "PO-2026-0103", "vendor_id": "V003", "po_date": "2026-10-01", "status": "OPEN",
+   "description": "Outbound freight to Chennai DC",
+   "lines": [
+     {"line_no": 1, "description": "Freight Bengaluru-Chennai (FTL), per trip", "quantity": 12, "unit_price": 15000}
+   ]},
+  {"po_id": "PO-2026-0104", "vendor_id": "V001", "po_date": "2026-11-01", "status": "OPEN",
+   "description": "Stationery restock",
+   "lines": [
+     {"line_no": 1, "description": "A4 copier paper 75gsm (ream)", "quantity": 100, "unit_price": 300}
+   ]},
+  {"po_id": "PO-2026-0105", "vendor_id": "V003", "po_date": "2026-10-01", "status": "OPEN",
+   "description": "Warehouse labour Q4",
+   "lines": [
+     {"line_no": 1, "description": "Warehouse loading/unloading labour, per shift", "quantity": 40, "unit_price": 3000}
+   ]}
+]

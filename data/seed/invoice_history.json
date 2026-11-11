@@ -1,0 +1,6 @@
+[
+  {"vendor_id": "V002", "invoice_number": "BCS/2026/1001", "invoice_date": "2026-10-05",
+   "po_id": "PO-2026-0102", "taxable_value": 200000, "total_amount": 236000, "status": "PAID"},
+  {"vendor_id": "V002", "invoice_number": "BCS/2026/1102", "invoice_date": "2026-11-04",
+   "po_id": "PO-2026-0102", "taxable_value": 200000, "total_amount": 236000, "status": "APPROVE"}
+]

@@ -1,0 +1,14 @@
+[
+  {"vendor_id": "V001", "name": "Acme Office Supplies Pvt Ltd", "gstin": "29AAACA1111A1Z1", "state_code": "29",
+   "bank_account": "50100012345678", "bank_ifsc": "HDFC0001234", "status": "APPROVED",
+   "contact_email": "accounts@acme-office.in", "contact_phone": "+91 80 4000 1111"},
+  {"vendor_id": "V002", "name": "Bharat Cloud Services LLP", "gstin": "27AAJFB2222B1Z2", "state_code": "27",
+   "bank_account": "000405012345", "bank_ifsc": "ICIC0000456", "status": "APPROVED",
+   "contact_email": "billing@bharatcloud.in", "contact_phone": "+91 22 6000 2222"},
+  {"vendor_id": "V003", "name": "Sharma Logistics", "gstin": "29ABCPS3333C1Z3", "state_code": "29",
+   "bank_account": "30012345678", "bank_ifsc": "SBIN0001111", "status": "APPROVED",
+   "contact_email": "ops@sharmalogistics.in", "contact_phone": "+91 80 4111 3333"},
+  {"vendor_id": "V004", "name": "Nimbus Print Works", "gstin": "33AADCN4444D1Z4", "state_code": "33",
+   "bank_account": "912010012345", "bank_ifsc": "UTIB0002222", "status": "BLOCKED",
+   "contact_email": "hello@nimbusprint.in", "contact_phone": "+91 44 4222 4444"}
+]
