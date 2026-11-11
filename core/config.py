@@ -25,7 +25,7 @@ def _secret(name: str, default: str | None = None) -> str | None:
 # Groq renames models often. Run `python scripts/check_groq.py` to list what
 # your key can use, then override via env/secrets if a default is gone.
 GROQ_API_KEY = _secret("GROQ_API_KEY")
-TEXT_MODEL = _secret("GROQ_TEXT_MODEL", "llama-3.3-70b-versatile")
+TEXT_MODEL = _secret("GROQ_TEXT_MODEL", "openai/gpt-oss-120b")
 VISION_MODEL = _secret("GROQ_VISION_MODEL", "qwen/qwen3.8-27b")
 LLM_TEMPERATURE = 0.0
 LLM_TIMEOUT_S = 60
