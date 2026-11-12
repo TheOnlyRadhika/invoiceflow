@@ -2,6 +2,8 @@
 import os
 from decimal import Decimal
 from pathlib import Path
+from dotenv import load_dotenv
+load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data"
@@ -30,7 +32,7 @@ VISION_MODEL = _secret("GROQ_VISION_MODEL", "qwen/qwen3.8-27b")
 LLM_TEMPERATURE = 0.0
 LLM_TIMEOUT_S = 60
 MAX_VISION_PAGES = 3          # Groq vision limit per request
-RENDER_DPI = 150
+RENDER_DPI = 200            # vision input sharpness
 
 # ---- Buyer --------------------------------------------------------------
 BUYER_NAME = "Zenith Retail Pvt Ltd"
@@ -81,5 +83,5 @@ REASON_CODES = {
     "TAX_TYPE_MISMATCH": ("HOLD", "Wrong GST type or rate"),
     "PO_CLOSED": ("HOLD", "PO is closed"),
     "PRICE_VARIANCE_MINOR": ("APPROVE_WITH_NOTE", "Small price variance (1-3%)"),
-    "PO_INFERRED": ("APPROVE_WITH_NOTE", "PO inferred by agent"),
+    "PO_INFERRED": ("APPROVE_WITH_NOTE", "PO inferred (none on invoice)"),
 }

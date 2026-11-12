@@ -148,6 +148,11 @@ def reset_and_seed() -> None:
                        h["status"], now_iso()))
 
 
+def clear_extraction_cache() -> None:
+    with connect() as c:
+        c.execute("DELETE FROM extraction_cache")
+
+
 # ------------------------------------------------------------------ vendors
 def get_vendor(vendor_id: str) -> dict | None:
     with connect() as c:
@@ -271,7 +276,7 @@ def insert_step(run_id: str, seq: int, stage: str, status: str,
 
 def list_runs() -> list[dict]:
     with connect() as c:
-        rows = _rows(c.execute("SELECT * FROM runs WHERE decision IS NOT NULL ORDER BY started_at DESC"))
+        rows = _rows(c.execute("SELECT * FROM runs WHERE decision IS NOT NULL ORDER BY started_at DESC, rowid DESC"))
     for r in rows:
         r["reason_codes"] = loads(r["reason_codes"], [])
     return rows
@@ -300,7 +305,7 @@ def update_review(run_id: str, review_status: str, note: str) -> None:
 def review_queue() -> list[dict]:
     with connect() as c:
         rows = _rows(c.execute("""SELECT * FROM runs WHERE review_status='PENDING'
-                                  ORDER BY started_at DESC"""))
+                                  ORDER BY started_at DESC, rowid DESC"""))
     for r in rows:
         r["reason_codes"] = loads(r["reason_codes"], [])
         r["evidence"] = loads(r["evidence"], {})

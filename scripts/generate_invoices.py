@@ -266,12 +266,12 @@ def build_pdf(inv) -> bytes:
 def make_scanned(pdf_bytes: bytes) -> bytes:
     """Render -> grayscale -> slight rotation, noise, blur -> image-only PDF."""
     page = pdfium.PdfDocument(pdf_bytes)[0]
-    img = page.render(scale=110 / 72).to_pil().convert("L")
-    img = img.rotate(1.2, expand=True, fillcolor=255)
-    noise = Image.effect_noise(img.size, 22).point(lambda p: 255 if p > 120 else p)
-    img = Image.blend(img, noise, 0.10).filter(ImageFilter.GaussianBlur(0.6))
+    img = page.render(scale=160 / 72).to_pil().convert("L")
+    img = img.rotate(0.8, expand=True, fillcolor=255)
+    noise = Image.effect_noise(img.size, 18).point(lambda p: 255 if p > 120 else p)
+    img = Image.blend(img, noise, 0.05).filter(ImageFilter.GaussianBlur(0.35))
     out = io.BytesIO()
-    img.convert("RGB").save(out, format="PDF", resolution=110)
+    img.convert("RGB").save(out, format="PDF", resolution=160)
     return out.getvalue()
 
 

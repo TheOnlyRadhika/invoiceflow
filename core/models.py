@@ -129,6 +129,7 @@ class RunContext:
     is_scanned: bool = False
     page_images: list[bytes] = field(default_factory=list)   # PNG bytes
     extracted: ExtractedInvoice | None = None
+    extraction_issues: list[str] = field(default_factory=list)   # numbers that still don't reconcile
     invoice_number_norm: str | None = None
     effective_conf: dict[str, float] = field(default_factory=dict)
     vendor: dict | None = None
