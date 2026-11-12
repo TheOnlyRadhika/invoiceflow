@@ -6,20 +6,20 @@ import streamlit as st
 from core import config, db
 from core.pipeline.ingest import render_pages
 from core.pipeline.orchestrator import STAGE_NAMES, run_pipeline
-from ui.components import AI_STAGES, STEP_ICON, decision_card, flow_strip, page_setup, stage_detail
+from ui.components import decision_card, flow_strip, page_setup, stage_detail, step_label
 
 page_setup("Process Invoice")
 
 SAMPLES = {
-    "01 · Happy path (Acme, full PO)": "01_happy_acme.pdf",
-    "02 · Split PO overrun (Bharat Cloud, 3rd invoice)": "02_split_po_overrun.pdf",
-    "03 · Scanned duplicate (Bharat Cloud)": "03_scanned_duplicate.pdf",
-    "04 · Missing PO reference (Sharma Logistics)": "04_missing_po_sharma.pdf",
-    "05 · Bank details changed (Acme)": "05_bank_change_acme.pdf",
-    "06 · Blocked vendor (Nimbus)": "06_blocked_vendor.pdf",
+    "01 — Acme Office Supplies: standard invoice": "01_happy_acme.pdf",
+    "02 — Bharat Cloud: third invoice on split PO": "02_split_po_overrun.pdf",
+    "03 — Bharat Cloud: scanned resubmission": "03_scanned_duplicate.pdf",
+    "04 — Sharma Logistics: no PO reference": "04_missing_po_sharma.pdf",
+    "05 — Acme Office Supplies: new bank details": "05_bank_change_acme.pdf",
+    "06 — Nimbus Print Works: blocked vendor": "06_blocked_vendor.pdf",
 }
 
-st.title("Process an invoice")
+st.title("Invoice processing")
 flow_strip()
 st.write("")
 
@@ -27,11 +27,11 @@ c1, c2, c3 = st.columns([2, 2, 1])
 with c1:
     upload = st.file_uploader("Upload a vendor invoice", type=["pdf", "png", "jpg", "jpeg"])
 with c2:
-    sample = st.selectbox("…or try a sample", ["—"] + list(SAMPLES.keys()))
+    sample = st.selectbox("Or select a sample invoice", ["—"] + list(SAMPLES.keys()))
 with c3:
     st.write("")
     st.write("")
-    run_clicked = st.button("▶ Process", type="primary", width="stretch")
+    run_clicked = st.button("Process invoice", type="primary", width="stretch")
 
 if upload is not None:
     filename, data = upload.name, upload.getvalue()
@@ -62,19 +62,19 @@ if run_clicked:
         st.warning("Upload a file or choose a sample first.")
         st.stop()
     with left:
-        st.markdown("#### Live run")
+        st.markdown("#### Processing steps")
         progress = st.progress(0.0, text="Starting…")
         boxes: dict[int, object] = {}
         out: list = []
         for ev in run_pipeline(filename, data, ctx_out=out):
-            ai = " 🤖" if ev.stage in AI_STAGES else ""
             if ev.status == "RUNNING":
-                boxes[ev.seq] = st.status(f"{ev.seq}. {ev.stage}{ai} · running…", state="running", expanded=False)
+                boxes[ev.seq] = st.status(step_label(ev.seq, ev.stage, "RUNNING", "running…"),
+                                          state="running", expanded=False)
                 progress.progress((ev.seq - 1) / len(STAGE_NAMES), text=f"{ev.stage}…")
                 continue
             box = boxes[ev.seq]
             state = "error" if ev.status == "FAIL" else "complete"
-            box.update(label=f"{STEP_ICON[ev.status]} {ev.seq}. {ev.stage}{ai} · {ev.summary} · {ev.duration_ms} ms",
+            box.update(label=step_label(ev.seq, ev.stage, ev.status, ev.summary, ev.duration_ms),
                        state=state, expanded=False)
             with box:
                 stage_detail(ev.stage, ev.detail)
@@ -92,9 +92,9 @@ if run_id:
             decision_card(run)
         if not run_clicked:
             with left:
-                st.markdown(f"#### Last run · `{run_id}`")
+                st.markdown(f"#### Last run · {run_id}")
                 from ui.components import stored_timeline
                 stored_timeline(run)
 elif not run_clicked:
     with left:
-        st.info("Pick a sample or upload a PDF, then press **Process**. Every stage appears here as it runs.")
+        st.caption("Select a sample or upload a PDF, then choose Process invoice. Each step appears here as it runs.")

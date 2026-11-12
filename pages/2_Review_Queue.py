@@ -4,7 +4,7 @@ import streamlit as st
 from core import db
 from core.money import format_inr
 from core.pipeline.orchestrator import apply_review
-from ui.components import decision_card, page_setup, pill
+from ui.components import decision_badge, decision_card, page_setup, pill
 
 page_setup("Review Queue")
 st.title("Review queue")
@@ -16,18 +16,18 @@ if not queue:
 else:
     for r in queue:
         title = f"{r['vendor_name'] or 'Unknown vendor'} · {r['invoice_number'] or r['filename']} · {format_inr(r['total_amount'])}"
-        with st.expander(f"{r['decision']} · {title}", expanded=len(queue) <= 2):
+        with st.expander(f"{decision_badge(r['decision'])}  {title}", expanded=len(queue) <= 2):
             run = db.get_run(r["run_id"])
             decision_card(run)
             note = st.text_area("Reviewer note (required)", key=f"note_{r['run_id']}",
                                 placeholder="e.g. Called vendor on number on file; bank change confirmed with cancelled cheque.")
             b1, b2, b3 = st.columns(3)
             choice = None
-            if b1.button("✅ Approve (override)", key=f"a_{r['run_id']}", width="stretch"):
+            if b1.button("Approve", key=f"a_{r['run_id']}", width="stretch"):
                 choice = "OVERRIDDEN_APPROVE"
-            if b2.button("⏸ Keep on hold", key=f"h_{r['run_id']}", width="stretch"):
+            if b2.button("Keep on hold", key=f"h_{r['run_id']}", width="stretch"):
                 choice = "CONFIRMED"
-            if b3.button("⛔ Reject", key=f"r_{r['run_id']}", width="stretch"):
+            if b3.button("Reject", key=f"r_{r['run_id']}", width="stretch"):
                 choice = "OVERRIDDEN_REJECT"
             if choice:
                 if not note.strip():

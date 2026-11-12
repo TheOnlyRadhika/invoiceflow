@@ -4,7 +4,7 @@ import streamlit as st
 
 from core import db
 from core.money import format_inr
-from ui.components import STATUS_LABEL, decision_card, page_setup, stored_timeline
+from ui.components import STATUS_COLOR, STATUS_LABEL, decision_card, page_setup, stored_timeline
 
 page_setup("Dashboard")
 st.title("Dashboard")
@@ -31,11 +31,15 @@ k[5].metric("Avg processing time", f"{df['duration_ms'].mean() / 1000:.1f}s")
 
 c1, c2 = st.columns([1, 2])
 with c1:
-    st.markdown("**Decision mix**")
-    mix = df["decision"].map(STATUS_LABEL).value_counts()
-    st.bar_chart(mix, horizontal=True, height=220)
+    st.markdown("#### Decision mix")
+    order = [s for s in STATUS_LABEL if s in set(df["decision"])]
+    counts = df["decision"].value_counts()
+    # one column per decision -> each bar gets its decision colour
+    mix = pd.DataFrame({STATUS_LABEL[s]: [counts[s] if s == r else 0 for r in order] for s in order},
+                       index=[STATUS_LABEL[r] for r in order])
+    st.bar_chart(mix, horizontal=True, height=220, color=[STATUS_COLOR[s] for s in order])
 with c2:
-    st.markdown("**Run history**")
+    st.markdown("#### Run history")
     f1, f2 = st.columns(2)
     dec_f = f1.multiselect("Decision", sorted(df["decision"].unique()))
     ven_f = f2.multiselect("Vendor", sorted(df["vendor_name"].dropna().unique()))
@@ -50,12 +54,14 @@ with c2:
         "Total": view["total_amount"].map(lambda v: format_inr(v)),
         "Decision": view["decision"].map(STATUS_LABEL),
         "Reasons": view["reason_codes"].map(lambda c: ", ".join(c) if c else "—"),
-        "Review": view["review_status"], "Secs": (view["duration_ms"] / 1000).round(1),
+        "Review": view["review_status"], "Time (s)": (view["duration_ms"] / 1000).round(1),
     })
-    st.dataframe(table, hide_index=True, width="stretch", height=260)
+    label_color = {STATUS_LABEL[k]: v for k, v in STATUS_COLOR.items()}
+    st.dataframe(table.style.map(lambda v: f"color:{label_color[v]};font-weight:600" if v in label_color else "",
+                                 subset=["Decision"]), hide_index=True, width="stretch", height=260)
 
 st.divider()
-st.markdown("### Run detail")
+st.markdown("#### Run detail")
 if view.empty:
     st.info("No runs match the filters.")
     st.stop()
@@ -66,5 +72,5 @@ left, right = st.columns([3, 2], gap="large")
 with right:
     decision_card(run)
 with left:
-    st.markdown("**Stage timeline**")
+    st.markdown("#### Steps")
     stored_timeline(run)
